@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="Png"
+	InheritedPropertySheets="$(OAH_INSTALLED_PATH)\vsprops\oah-PC.vsprops"
+	>
+	<Tool
+		Name="VCLinkerTool"
+		ModuleDefinitionFile="..\..\scripts\pngw32.def"
+	/>
+	<UserMacro
+		Name="PngMajorVersion"
+		Value="1"
+	/>
+	<UserMacro
+		Name="PngMinorVersion"
+		Value="2"
+	/>
+	<UserMacro
+		Name="PngRelease"
+		Value="40"
+	/>
+	<UserMacro
+		Name="PngVersion"
+		Value="$(PngMajorVersion).$(PngMinorVersion).$(PngRelease)"
+	/>
+</VisualStudioPropertySheet>
