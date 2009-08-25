@@ -4,7 +4,7 @@
 	Version="9.00"
 	Name="libpng"
 	ProjectGUID="{A670A18E-6627-4752-AAE1-A42352F75D1D}"
-	RootNamespace="libpng"
+	RootNamespace="libpng12"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
