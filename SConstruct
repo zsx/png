@@ -33,7 +33,8 @@ env.ParseConfig('pkg-config zlib --cflags --libs')
 env.Append(CPPPATH=['#'])
 env.Append(CFLAGS=env['DEBUG_CFLAGS'])
 env.Append(CPPDEFINES=env['DEBUG_CPPDEFINES'])
-libname = 'libpng%s%s' % (PNG_VERSION_MAJOR, PNG_VERSION_MINOR)
+name = 'png%s%s' % (PNG_VERSION_MAJOR, PNG_VERSION_MINOR)
+libname = 'lib' + name
 
 env.DotIn('scripts/' + libname + '.pc', 'scripts/libpng.pc.in')
 env.Alias('install', env.Install('$PREFIX/lib/pkgconfig', 'scripts/' + libname + '.pc'))
@@ -43,9 +44,10 @@ libpng_SOURCES = Split("png.c pngset.c pngget.c pngrutil.c pngtrans.c pngwutil.c
 	pngwtran.c pngmem.c pngerror.c pngpread.c")
 
 env.RES('scripts/pngw32.res', 'scripts/pngw32.rc')
-dll = env.SharedLibrary(libname + env['LIB_SUFFIX'] + '.dll', libpng_SOURCES + ['scripts/pngw32.def', 'scripts/pngw32.res'])
+dll = env.SharedLibrary([libname + env['LIB_SUFFIX'] + '.dll', name + '.lib'], libpng_SOURCES + ['scripts/pngw32.def', 'scripts/pngw32.res'])
 
 env.AddPostAction(dll, 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2')
 
 env.Alias('install', env.Install('$PREFIX/include', ['png.h', 'pngconf.h']))
 env.Alias('install', env.Install('$PREFIX/bin', libname + env['LIB_SUFFIX'] + '.dll'))
+env.Alias('install', env.Install('$PREFIX/lib', name + '.lib'))
