@@ -36,8 +36,8 @@ env.Append(CPPDEFINES=env['DEBUG_CPPDEFINES'])
 name = 'png%s%s' % (PNG_VERSION_MAJOR, PNG_VERSION_MINOR)
 libname = 'lib' + name
 
-env.DotIn('scripts/' + libname + '.pc', 'scripts/libpng.pc.in')
-env.Alias('install', env.Install('$PREFIX/lib/pkgconfig', 'scripts/' + libname + '.pc'))
+env.DotIn('scripts/' + name + '.pc', 'scripts/libpng.pc.in')
+env.Alias('install', env.Install('$PREFIX/lib/pkgconfig', 'scripts/' + name + '.pc'))
 
 libpng_SOURCES = Split("png.c pngset.c pngget.c pngrutil.c pngtrans.c pngwutil.c \
 	pngread.c pngrio.c pngwio.c pngwrite.c pngrtran.c \
