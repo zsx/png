@@ -48,6 +48,6 @@ dll = env.SharedLibrary([libname + env['LIB_SUFFIX'] + '.dll', name + '.lib'], l
 
 env.AddPostAction(dll, 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2')
 
-env.Alias('install', env.Install('$PREFIX/include', ['png.h', 'pngconf.h']))
+env.Alias('install', env.Install('$PREFIX/include/' + libname, ['png.h', 'pngconf.h']))
 env.Alias('install', env.Install('$PREFIX/bin', libname + env['LIB_SUFFIX'] + '.dll'))
 env.Alias('install', env.Install('$PREFIX/lib', name + '.lib'))
