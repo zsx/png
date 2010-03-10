@@ -7,6 +7,7 @@ opts = Variables()
 opts.Add(PathVariable('PREFIX', 'Installation prefix', os.path.expanduser('~/FOSS'), PathVariable.PathIsDirCreate))
 opts.Add(BoolVariable('DEBUG', 'Build with Debugging information', 0))
 opts.Add(PathVariable('PERL', 'Path to the executable perl', r'C:\Perl\bin\perl.exe', PathVariable.PathIsFile))
+opts.Add(BoolVariable('WITH_OSMSVCRT', 'Link with the os supplied msvcrt.dll instead of the one supplied by the compiler (msvcr90.dll, for instance)', 0))
 
 env = Environment(variables = opts,
                   ENV=os.environ, tools = ['default', GBuilder])
@@ -33,6 +34,10 @@ env.ParseConfig('pkg-config zlib --cflags --libs')
 env.Append(CPPPATH=['#'])
 env.Append(CFLAGS=env['DEBUG_CFLAGS'])
 env.Append(CPPDEFINES=env['DEBUG_CPPDEFINES'])
+
+if env['WITH_OSMSVCRT']:
+    env['LIB_SUFFIX'] = '-0'
+
 name = 'png%s%s' % (PNG_VERSION_MAJOR, PNG_VERSION_MINOR)
 libname = 'lib' + name
 
