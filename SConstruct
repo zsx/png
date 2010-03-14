@@ -41,6 +41,8 @@ if env['WITH_OSMSVCRT']:
 name = 'png%s%s' % (PNG_VERSION_MAJOR, PNG_VERSION_MINOR)
 libname = 'lib' + name
 
+env['PDB'] = libname + '.pdb'
+
 env.DotIn('scripts/' + name + '.pc', 'scripts/libpng.pc.in')
 env.Alias('install', env.Install('$PREFIX/lib/pkgconfig', 'scripts/' + name + '.pc'))
 
@@ -56,3 +58,6 @@ env.AddPostAction(dll, 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresou
 env.Alias('install', env.Install('$PREFIX/include/' + libname, ['png.h', 'pngconf.h']))
 env.Alias('install', env.Install('$PREFIX/bin', libname + env['LIB_SUFFIX'] + '.dll'))
 env.Alias('install', env.Install('$PREFIX/lib', name + '.lib'))
+if env['DEBUG']:
+    env.Alias('install', env.Install('$PREFIX/pdb', env['PDB']))
+
