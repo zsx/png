@@ -1,0 +1,16 @@
+<?xml version='1.0'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+   <Module Id='LibpngRun' Language='1033' Version='@VERSION@'>
+      <Package Id='a6994271-b34c-4caf-a992-68eca9cd47d1' Description='Libpng runtime package'
+                Comments='This is a windows installer for libpng library runtime files'
+                Manufacturer='Gnome4Win' InstallerVersion='200' />
+ 
+      <Directory Id='TARGETDIR' Name='SourceDir'>
+		  <Directory Id='dlls' Name='bin'>
+			  <Component Id='dlls' Guid='694abf33-9419-4db7-b644-b68d4e445c72'>
+				  @DLLS@
+			  </Component>
+		  </Directory>
+      </Directory>
+   </Module>
+</Wix>

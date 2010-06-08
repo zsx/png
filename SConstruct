@@ -1,7 +1,7 @@
 # vim: ft=python expandtab
 
 import os
-from site_init import GBuilder, Initialize
+from site_init import *
 
 opts = Variables()
 opts.Add(PathVariable('PREFIX', 'Installation prefix', os.path.expanduser('~/FOSS'), PathVariable.PathIsDirCreate))
@@ -45,19 +45,37 @@ env['PDB'] = libname + '.pdb'
 
 env.DotIn('scripts/' + name + '.pc', 'scripts/libpng.pc.in')
 env.Alias('install', env.Install('$PREFIX/lib/pkgconfig', 'scripts/' + name + '.pc'))
+env['DOT_IN_SUBS']['@PCS@'] = generate_file_element(name + '.pc', r'lib/pkgconfig', env)
 
 libpng_SOURCES = Split("png.c pngset.c pngget.c pngrutil.c pngtrans.c pngwutil.c \
 	pngread.c pngrio.c pngwio.c pngwrite.c pngrtran.c \
 	pngwtran.c pngmem.c pngerror.c pngpread.c")
 
 env.RES('scripts/pngw32.res', 'scripts/pngw32.rc')
-dll = env.SharedLibrary([libname + env['LIB_SUFFIX'] + '.dll', name + '.lib'], libpng_SOURCES + ['scripts/pngw32.def', 'scripts/pngw32.res'])
+dllname = libname + env['LIB_SUFFIX'] + '.dll'
+dll = env.SharedLibrary([dllname, name + '.lib'], libpng_SOURCES + ['scripts/pngw32.def', 'scripts/pngw32.res'])
 
 env.AddPostAction(dll, 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2')
 
 env.Alias('install', env.Install('$PREFIX/include/' + libname, ['png.h', 'pngconf.h']))
+env['DOT_IN_SUBS']['@HEADERS@'] = generate_file_element(['png.h', 'pngconf.h'], r'include/' + libname, env)
+
 env.Alias('install', env.Install('$PREFIX/bin', libname + env['LIB_SUFFIX'] + '.dll'))
+env['DOT_IN_SUBS']['@DLLS@'] = generate_file_element(dllname, r'bin', env)
+
 env.Alias('install', env.Install('$PREFIX/lib', name + '.lib'))
+env['DOT_IN_SUBS']['@LIBS@'] = generate_file_element(name + '.lib', r'lib', env)
+
 if env['DEBUG']:
     env.Alias('install', env.Install('$PREFIX/pdb', env['PDB']))
+    env['DOT_IN_SUBS']['@PDBS@'] = '''
+		  <Directory Id='pdb' Name='pdb'>
+			  <Component Id='pdbs' Guid='81060e57-20bc-4dbe-b970-38772a014c2b'>
+				  %s 
+			  </Component>
+		  </Directory>''' % generate_file_element(env['PDB'], r'pdb', env)
 
+env.DotIn('pngrun.wxs', 'pngrun.wxs.in')
+env.DotIn('pngdev.wxs', 'pngdev.wxs.in')
+env.Depends(['pngrun.wxs', 'pngdev.wxs'], 'SConstruct')
+env.Alias('install', env.Install('$PREFIX/wxs', ['pngrun.wxs', 'pngdev.wxs']))
