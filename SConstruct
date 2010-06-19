@@ -47,7 +47,6 @@ libname = 'lib' + name
 env['PDB'] = libname + '.pdb'
 
 env.DotIn('scripts/' + name + '.pc', 'scripts/libpng.pc.in')
-env.Alias('install', env.Install('$PREFIX/lib/pkgconfig', 'scripts/' + name + '.pc'))
 
 libpng_SOURCES = Split("png.c pngset.c pngget.c pngrutil.c pngtrans.c pngwutil.c \
 	pngread.c pngrio.c pngwio.c pngwrite.c pngrtran.c \
@@ -73,9 +72,8 @@ run_p = SubElement(run_m, 'Package', Id=str(uuid4()).upper(), Description='Libpn
                 Manufacturer='Gnome4Win', InstallerVersion='200')
 run_target = SubElement(run_m, 'Directory', Id='TARGETDIR', Name='SourceDir')
 
-dev_dinclude = SubElement(dev_target, 'Directory', Id='include', Name='include')
-
 env.Alias('install', env.Install('$PREFIX/include/' + libname, ['png.h', 'pngconf.h']))
+dev_dinclude = SubElement(dev_target, 'Directory', Id='include', Name='include')
 dev_cheader = SubElement(dev_dinclude, "Component", Id='headers', Guid=str(uuid4()).upper())
 FileElement(dev_cheader, ['png.h', 'pngconf.h'], 'include/' + libname, env)
 
@@ -89,6 +87,7 @@ dev_lib = SubElement(dev_target, 'Directory', Id='lib', Name='lib')
 dev_clib = SubElement(dev_lib, "Component", Id='libs', Guid=str(uuid4()).upper())
 FileElement(dev_clib, name+'.lib', 'lib', env)
 
+env.Alias('install', env.Install('$PREFIX/lib/pkgconfig', 'scripts/' + name + '.pc'))
 dev_pkgconfig = SubElement(dev_lib, 'Directory', Id='pkgconfig', Name='pkgconfig')
 dev_cpkgconfig = SubElement(dev_pkgconfig, "Component", Id='pkgconfigs', Guid=str(uuid4()).upper())
 FileElement(dev_cpkgconfig, name+'.pc', 'lib/pkgconfig', env)
